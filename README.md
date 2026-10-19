@@ -1,3 +1,5 @@
+<p align="center"><img src="icon-192.png" width="120" alt="Logo Mi Agenda"></p>
+
 # Mi Agenda
 
 App web (PWA) para control de turnos, clientes e ingresos de manicura. Funciona sin conexión y se instala en la pantalla de inicio (Android/iPhone). No usa librerías externas: la exportación a Excel está incluida en `index.html`.
