@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mi Agenda</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="theme-color" content="#A77CA9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mi Agenda">
+<style>
+:root{--bg:#FEEBEF;--tx:#2C2C2C;--cd:rgba(255,255,255,.85);--in:#fff;--p:#A77CA9;--ac:#E5989B}
+body[data-bg=lila]{--bg:#F3EAFB}body[data-bg=rosa]{--bg:#FEEBEF}body[data-bg=durazno]{--bg:#FFF0E5}body[data-bg=menta]{--bg:#E8F7F2}body[data-bg=cielo]{--bg:#E6F3FA}
+body.dark{--bg:#121212;--tx:#E0E0E0;--cd:#1E1E1E;--in:#2A2A2A}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:40px;transition:background .3s}
+[hidden]{display:none!important}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;position:sticky;top:0;z-index:50;background:var(--cd);backdrop-filter:blur(10px)}
+header div{display:flex;align-items:center;gap:10px;font-weight:700}
+header img{width:34px;height:34px;border-radius:8px}
+.wrap{max-width:600px;margin:0 auto;padding:16px}
+.dash{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.m{background:var(--cd);border-radius:16px;padding:12px;text-align:center}
+.m p{font-size:11px;text-transform:uppercase;opacity:.7}.m h3{font-size:20px;color:var(--p)}
+.card{background:var(--cd);border-radius:20px;padding:16px;margin-bottom:16px}
+h2{font-size:16px;margin-bottom:12px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}.w2{grid-column:span 2}
+input,select,button{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,.12);font-size:16px;background:var(--in);color:var(--tx)}
+button{background:var(--p);color:#fff;border:none;font-weight:600;cursor:pointer}
+button.s{background:transparent;border:1px solid var(--p);color:var(--p)}
+button.r{background:#d9534f}
+.it{display:flex;align-items:center;gap:6px;background:var(--cd);border-left:5px solid var(--ac);border-radius:14px;padding:10px;margin-bottom:8px}
+.it.ok{border-left-color:#5fcfb8;opacity:.75}
+.inf{flex:1;min-width:0}.inf b,.inf small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.inf small{opacity:.7;font-size:12px}
+.qc{width:72px;padding:6px;text-align:right;border:1px dashed rgba(0,0,0,.3);font-weight:700;font-size:14px}
+.ic{width:32px;height:32px;padding:0;border-radius:50%;background:var(--in);color:var(--p);font-size:14px;flex:none}
+.mut{opacity:.7;font-size:14px}.rem{padding:6px 0;font-size:14px;border-bottom:1px solid rgba(0,0,0,.06)}
+.sw{display:flex;gap:10px;margin:6px 0 12px}.sw i{width:38px;height:38px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.sw i.on{border-color:var(--p)}
+label{font-size:13px;opacity:.8;display:block;margin:8px 0 4px}
+.bx{display:flex;gap:8px;justify-content:center;margin:12px 0}.bx input{width:46px;height:56px;text-align:center;font-size:24px;padding:0}
+.hero{background:linear-gradient(135deg,var(--p),var(--ac));color:#fff;border-radius:24px;padding:18px 20px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 8px 20px rgba(167,124,169,.35)}
+.clk{font-size:46px;font-weight:700;letter-spacing:-1px;line-height:1;font-variant-numeric:tabular-nums}
+.clk small{font-size:16px;font-weight:600;opacity:.85;margin-left:4px;letter-spacing:0}
+.dtx{text-align:right;line-height:1.35;font-size:14px;opacity:.95;margin-left:auto}.dtx b{display:block;font-size:19px;text-transform:capitalize}
+.db{flex:none;width:50px;text-align:center;border-radius:12px;background:var(--in);padding:5px 0;line-height:1.1;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.db b{display:block;font-size:20px;color:var(--p)}.db span{font-size:10px;text-transform:uppercase;letter-spacing:.5px;opacity:.7}
+.tp{display:inline-block;background:rgba(167,124,169,.16);color:var(--p);border-radius:20px;padding:1px 9px;font-size:12px;font-weight:600;margin-top:3px}
+#lock{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:10px;text-align:center}
+#lock img{width:84px;height:84px;border-radius:20px}.err{color:#d9534f;min-height:20px;font-size:14px}
+#lock button{max-width:280px}
+</style>
+</head>
+<body>
+<div id="lock" hidden>
+  <img src="icon-192.png" alt=""><h2>Mi Agenda</h2>
+  <div class="bx" id="lb"></div>
+  <input id="lp" type="password" placeholder="Contraseña" style="max-width:280px" autocomplete="off">
+  <button id="lgo" style="max-width:280px">Entrar</button>
+  <div class="err" id="le"></div>
+  <button class="s" id="bio">Usar huella / Face ID</button>
+  <button class="s" id="forgot">Olvidé mi contraseña</button>
+</div>
+
+<header><div><img src="icon-192.png" alt="">Mi Agenda</div><div><button class="ic" id="bT" title="Tema">🌓</button><button class="ic" id="bS" title="Ajustes">⚙️</button></div></header>
+
+<div class="wrap" id="v1">
+  <div class="hero"><div class="clk" id="clk"></div><div class="dtx"><b id="wd"></b><span id="fdt"></span></div></div>
+  <div class="dash">
+    <div class="m"><p>Clientes</p><h3 id="m1">0</h3></div>
+    <div class="m"><p>Pendientes</p><h3 id="m2">0</h3></div>
+    <div class="m"><p>Atendidos</p><h3 id="m3">0</h3></div>
+    <div class="m"><p>Ingresos</p><h3 id="m4">$0</h3></div>
+  </div>
+  <div class="card" id="remc" hidden><h2>🔔 Próximas 48 horas</h2><div id="rem"></div></div>
+  <div class="card">
+    <h2 id="ft">Nuevo turno</h2>
+    <form id="f" class="g">
+      <input id="fn" class="w2" placeholder="Cliente" required>
+      <input id="fs" class="w2" placeholder="Servicio" required>
+      <input id="fd" type="date" required><input id="fh" type="time" required>
+      <input id="fc" class="w2" type="number" inputmode="decimal" min="0" placeholder="Costo (opcional)">
+      <button class="w2" id="sv">Agregar turno</button>
+      <button type="button" class="s w2" id="cancel" hidden>Cancelar edición</button>
+    </form>
+  </div>
+  <h2>Turnos</h2><div id="list"></div>
+  <button class="s" id="xl">📥 Exportar a Excel</button>
+  <p class="mut" style="text-align:center;margin-top:16px">Mi Agenda v3.3</p>
+</div>
+
+<div class="wrap" id="v2" hidden>
+  <div class="card"><h2>Apariencia</h2>
+    <label>Formato de hora</label><select id="sf"><option value="1">24 horas</option><option value="0">12 horas (AM/PM)</option></select>
+    <label>Tema</label><select id="st"><option value="auto">Automático</option><option value="light">Claro</option><option value="dark">Oscuro</option></select>
+    <label>Color de fondo (acuarela)</label>
+    <div class="sw" id="sw"></div>
+  </div>
+  <div class="card"><h2>Notificaciones</h2><p class="mut" style="margin-bottom:10px">Avisos de turnos pendientes en las próximas 48 horas.</p><button id="nt">Activar notificaciones</button></div>
+  <div class="card"><h2>🔒 Seguridad</h2>
+    <p class="mut" id="ss"></p>
+    <div id="setup">
+      <label>Tipo</label><select id="pt"><option value="pin">Numérica (PIN)</option><option value="alfa">Alfanumérica</option></select>
+      <div id="plw"><label>Dígitos</label><select id="pl"><option>4</option><option>5</option><option>6</option></select></div>
+      <label>Nueva contraseña</label><div class="bx" id="sb"></div><input id="sp" type="password" placeholder="Mínimo 4 caracteres" hidden autocomplete="new-password">
+      <button id="spw" style="margin-top:8px">Guardar contraseña</button>
+    </div>
+    <button class="s" id="bioOn" style="margin-top:8px" hidden>Activar huella / Face ID</button>
+    <button class="r" id="rmpw" style="margin-top:8px" hidden>Quitar contraseña</button>
+  </div>
+  <button class="s" id="back">← Volver a la agenda</button>
+</div>
+
+<script>
+//#PURE
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hash(s){s='ma'+s;let a=0xdeadbeef,b=0x41c6ce57;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return(4294967296*(2097151&b)+(a>>>0)).toString(36)}
+function crc32(u){let t=crc32.t;if(!t){t=crc32.t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}}let r=-1;for(let i=0;i<u.length;i++)r=t[(r^u[i])&255]^(r>>>8);return(r^-1)>>>0}
+function zip(files,type){const e=new TextEncoder(),parts=[],cd=[];let off=0,cs=0;
+for(const f of files){const n=e.encode(f.n),d=e.encode(f.d),c=crc32(d);
+const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,33,true);h.setUint32(14,c,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,n.length,true);
+parts.push(new Uint8Array(h.buffer),n,d);
+const g=new DataView(new ArrayBuffer(46));g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);g.setUint16(14,33,true);g.setUint32(16,c,true);g.setUint32(20,d.length,true);g.setUint32(24,d.length,true);g.setUint16(28,n.length,true);g.setUint32(42,off,true);
+cd.push(new Uint8Array(g.buffer),n);off+=30+n.length+d.length;cs+=46+n.length}
+const z=new DataView(new ArrayBuffer(22));z.setUint32(0,0x06054b50,true);z.setUint16(8,files.length,true);z.setUint16(10,files.length,true);z.setUint32(12,cs,true);z.setUint32(16,off,true);
+return new Blob([...parts,...cd,new Uint8Array(z.buffer)],{type:type})}
+function xlsx(rows){const col=j=>String.fromCharCode(65+j),H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships',P='http://schemas.openxmlformats.org/package/2006/relationships';
+const sd=rows.map((r,i)=>'<row r="'+(i+1)+'">'+r.map((v,j)=>{const a=col(j)+(i+1);return v===''||v==null?'':typeof v==='number'?'<c r="'+a+'"><v>'+v+'</v></c>':'<c r="'+a+'" t="inlineStr"><is><t>'+esc(v)+'</t></is></c>'}).join('')+'</row>').join('');
+return zip([
+{n:'[Content_Types].xml',d:H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>'},
+{n:'_rels/.rels',d:H+'<Relationships xmlns="'+P+'"><Relationship Id="rId1" Type="'+R+'/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+{n:'xl/workbook.xml',d:H+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="'+R+'"><sheets><sheet name="Turnos" sheetId="1" r:id="rId1"/></sheets></workbook>'},
+{n:'xl/_rels/workbook.xml.rels',d:H+'<Relationships xmlns="'+P+'"><Relationship Id="rId1" Type="'+R+'/worksheet" Target="worksheets/sheet1.xml"/></Relationships>'},
+{n:'xl/worksheets/sheet1.xml',d:H+'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>'+sd+'</sheetData></worksheet>'}
+],'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')}
+function fmtHora(h,f24){if(!h||f24)return h||'';const[H,M]=h.split(':').map(Number);return(H%12||12)+':'+String(M).padStart(2,'0')+' '+(H<12?'AM':'PM')}
+//#END
+
+const $=id=>document.getElementById(id);
+const L=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const S=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let T=L('ma_t',[]),C=Object.assign({f24:false,bg:'rosa',th:'auto',pw:null,pt:'pin',pl:4,cred:null,nt:false},L('ma_c',{})),editId=null;
+const sc=()=>S('ma_c',C),st=()=>S('ma_t',T);
+if(!C.v){C.f24=false;C.v=1;sc()}
+const money=n=>'$'+Number(n).toLocaleString('es-CO');
+const dt=t=>new Date(t.d+'T'+(t.h||'00:00')).getTime();
+const fd=d=>d.split('-').reverse().join('/');
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const bd=d=>{const p=d.split('-');return '<div class="db"><b>'+(+p[2])+'</b><span>'+MES[+p[1]-1]+'</span></div>'};
+const wk=d=>{const s=new Date(d+'T00:00').toLocaleDateString('es',{weekday:'short'}).replace('.','');return s.charAt(0).toUpperCase()+s.slice(1)};
+function tick(){const n=new Date();let h=n.getHours();const m=String(n.getMinutes()).padStart(2,'0'),s=String(n.getSeconds()).padStart(2,'0');let ap='';
+  if(C.f24)h=String(h).padStart(2,'0');else{ap='<small>'+(h<12?'AM':'PM')+'</small>';h=h%12||12}
+  $('clk').innerHTML=h+':'+m+'<small>:'+s+'</small>'+ap;
+  $('wd').textContent=n.toLocaleDateString('es',{weekday:'long'});$('fdt').textContent=n.toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'})}
+
+function theme(){const d=C.th==='dark'||(C.th==='auto'&&matchMedia('(prefers-color-scheme:dark)').matches);document.body.classList.toggle('dark',d);document.body.dataset.bg=C.bg}
+matchMedia('(prefers-color-scheme:dark)').addEventListener&&matchMedia('(prefers-color-scheme:dark)').addEventListener('change',theme);
+
+function render(){
+  tick();const at=T.filter(t=>t.a),ing=at.reduce((s,t)=>s+(+t.c||0),0);
+  $('m1').textContent=T.length;$('m2').textContent=T.length-at.length;$('m3').textContent=at.length;$('m4').textContent=money(ing);
+  const now=Date.now(),pr=T.filter(t=>!t.a&&dt(t)>=now&&dt(t)<=now+48*36e5).sort((a,b)=>dt(a)-dt(b));
+  $('remc').hidden=!pr.length;
+  $('rem').innerHTML=pr.map(t=>'<div class="rem" style="display:flex;gap:10px;align-items:center">'+bd(t.d)+'<div><b>'+esc(t.n)+'</b> · '+esc(t.s)+'<br><span class="tp">'+wk(t.d)+' · '+fmtHora(t.h,C.f24)+'</span></div></div>').join('');
+  $('list').innerHTML=T.length?T.map(t=>'<div class="it'+(t.a?' ok':'')+'">'+bd(t.d)+'<div class="inf"><b>'+esc(t.n)+'</b><small>'+esc(t.s)+'</small><small><span class="tp">'+wk(t.d)+' · '+fmtHora(t.h,C.f24)+'</span></small></div><input class="qc" data-id="'+t.id+'" type="number" inputmode="decimal" min="0" placeholder="$" value="'+esc(t.c)+'"><button class="ic" data-a="ok" data-id="'+t.id+'" title="Atendido">'+(t.a?'↩':'✓')+'</button><button class="ic" data-a="ed" data-id="'+t.id+'" title="Editar">✏️</button><button class="ic" data-a="del" data-id="'+t.id+'" title="Eliminar">🗑️</button></div>').join(''):'<p class="mut">Aún no hay turnos.</p>';
+}
+$('list').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=T.find(x=>x.id===+b.dataset.id);if(!t)return;
+  if(b.dataset.a==='ok')t.a=!t.a;
+  else if(b.dataset.a==='del'){if(!confirm('¿Eliminar este turno?'))return;T=T.filter(x=>x!==t)}
+  else{editId=t.id;$('fn').value=t.n;$('fs').value=t.s;$('fd').value=t.d;$('fh').value=t.h;$('fc').value=t.c;$('ft').textContent='Editar turno';$('sv').textContent='Guardar cambios';$('cancel').hidden=false;scrollTo({top:0,behavior:'smooth'});return}
+  st();render()};
+$('list').onchange=e=>{if(!e.target.classList.contains('qc'))return;const t=T.find(x=>x.id===+e.target.dataset.id);if(t){t.c=e.target.value===''?'':+e.target.value;st();render()}};
+function resetForm(){editId=null;$('f').reset();$('ft').textContent='Nuevo turno';$('sv').textContent='Agregar turno';$('cancel').hidden=true}
+$('cancel').onclick=resetForm;
+$('f').onsubmit=e=>{e.preventDefault();
+  const o={n:$('fn').value.trim(),s:$('fs').value.trim(),d:$('fd').value,h:$('fh').value,c:$('fc').value===''?'':+$('fc').value};
+  if(editId){Object.assign(T.find(x=>x.id===editId)||{},o)}else T.push(Object.assign({id:Date.now(),a:false},o));
+  resetForm();st();render();checkN()};
+
+$('xl').onclick=()=>{if(!T.length)return alert('No hay turnos para exportar.');
+  const rows=[['Cliente','Servicio','Fecha','Hora','Costo','Estado']].concat(T.map(t=>[t.n,t.s,t.d,t.h,t.c===''?'':+t.c,t.a?'Atendido':'Pendiente']));
+  rows.push(['','','','','','']);rows.push(['','','','','Total atendidos',T.filter(t=>t.a).reduce((s,t)=>s+(+t.c||0),0)]);
+  const a=document.createElement('a');a.href=URL.createObjectURL(xlsx(rows));a.download='mi-agenda.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+
+/* Ajustes */
+$('bS').onclick=()=>{$('v1').hidden=true;$('v2').hidden=false;secUI()};
+$('back').onclick=()=>{$('v2').hidden=true;$('v1').hidden=false};
+$('bT').onclick=()=>{C.th=document.body.classList.contains('dark')?'light':'dark';$('st').value=C.th;sc();theme()};
+$('sf').onchange=()=>{C.f24=$('sf').value==='1';sc();render()};
+$('st').onchange=()=>{C.th=$('st').value;sc();theme()};
+const BG={lila:'#E4D2F6',rosa:'#FAD4DC',durazno:'#FFDDC2',menta:'#C9EEE2',cielo:'#C5E3F4'};
+function swatches(){$('sw').innerHTML=Object.keys(BG).map(k=>'<i data-k="'+k+'" title="'+k+'" style="background:'+BG[k]+'" class="'+(C.bg===k?'on':'')+'"></i>').join('')}
+$('sw').onclick=e=>{const k=e.target.dataset.k;if(k){C.bg=k;sc();theme();swatches()}};
+
+/* Notificaciones */
+function show(t,b){const o={body:b,icon:'icon-192.png'};
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.ready.then(r=>r.showNotification(t,o)).catch(()=>{});
+  else try{new Notification(t,o)}catch(e){}}
+function checkN(){if(!C.nt||!('Notification' in window)||Notification.permission!=='granted')return;
+  const d=L('ma_n',{}),now=Date.now();
+  T.forEach(t=>{const ms=dt(t)-now;if(!t.a&&ms>0&&ms<=48*36e5&&!d[t.id]){d[t.id]=1;show('Turno próximo: '+t.n,t.s+' · '+fd(t.d)+' '+fmtHora(t.h,C.f24))}});S('ma_n',d)}
+$('nt').onclick=async()=>{if(!('Notification' in window))return alert('Este navegador no admite notificaciones. En iPhone, instala primero la app en la pantalla de inicio.');
+  const p=await Notification.requestPermission();C.nt=p==='granted';sc();$('nt').textContent=C.nt?'Notificaciones activadas ✓':'Activar notificaciones';if(C.nt)checkN();else alert('Permiso denegado.')};
+
+/* Seguridad */
+function mkBoxes(el,n,cb){el.innerHTML='';for(let i=0;i<n;i++){const x=document.createElement('input');x.type='password';x.inputMode='numeric';x.maxLength=1;x.autocomplete='off';el.appendChild(x)}
+  const bs=[...el.children];
+  bs.forEach((x,i)=>{x.oninput=()=>{x.value=x.value.replace(/\D/g,'').slice(-1);if(x.value&&bs[i+1])bs[i+1].focus();if(cb&&bs.every(b=>b.value))cb(val(el))};
+    x.onkeydown=e=>{if(e.key==='Backspace'&&!x.value&&bs[i-1]){bs[i-1].focus();bs[i-1].value=''}}})}
+const val=el=>[...el.children].map(i=>i.value).join('');
+function secUI(){const on=!!C.pw;
+  $('ss').textContent=on?'Contraseña activa. Puedes cambiarla o quitarla.':'Sin contraseña. Actívala si quieres proteger tu agenda.';
+  $('pt').value=C.pt;$('pl').value=C.pl;$('sf').value=C.f24?'1':'0';$('st').value=C.th;
+  $('nt').textContent=C.nt?'Notificaciones activadas ✓':'Activar notificaciones';
+  setupBoxes();$('rmpw').hidden=!on;$('bioOn').hidden=!(on&&window.PublicKeyCredential);$('bioOn').textContent=C.cred?'Huella / Face ID activada ✓ (volver a registrar)':'Activar huella / Face ID';swatches()}
+function setupBoxes(){const pin=$('pt').value==='pin';$('plw').hidden=!pin;$('sb').hidden=!pin;$('sp').hidden=pin;if(pin)mkBoxes($('sb'),+$('pl').value)}
+$('pt').onchange=$('pl').onchange=setupBoxes;
+$('spw').onclick=()=>{const pin=$('pt').value==='pin',v=pin?val($('sb')):$('sp').value;
+  if(pin&&v.length!==+$('pl').value)return alert('Completa todas las casillas.');
+  if(!pin&&v.length<4)return alert('Usa al menos 4 caracteres.');
+  C.pw=hash(v);C.pt=$('pt').value;C.pl=+$('pl').value;C.cred=null;sc();$('sp').value='';alert('Contraseña guardada.');secUI()};
+$('rmpw').onclick=()=>{if(confirm('¿Quitar la contraseña?')){C.pw=null;C.cred=null;sc();secUI()}};
+const b64=b=>btoa(String.fromCharCode.apply(null,new Uint8Array(b))),unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+$('bioOn').onclick=async()=>{try{const c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'Mi Agenda'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'usuario',displayName:'Usuario'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});C.cred=b64(c.rawId);sc();secUI();alert('Huella / Face ID activado.')}catch(e){alert('No se pudo activar en este dispositivo (requiere HTTPS y biometría configurada).')}};
+
+function unlock(){$('lock').hidden=true;$('le').textContent=''}
+function lockUI(){if(!C.pw){$('lock').hidden=true;return}
+  const pin=C.pt==='pin';$('lock').hidden=false;$('lb').hidden=!pin;$('lp').hidden=pin;$('lgo').hidden=pin;$('le').textContent='';
+  if(pin){mkBoxes($('lb'),C.pl,v=>{if(hash(v)===C.pw)unlock();else{$('le').textContent='Código incorrecto';[...$('lb').children].forEach(i=>i.value='');$('lb').children[0].focus()}})}
+  $('bio').hidden=!(C.cred&&window.PublicKeyCredential)}
+$('lgo').onclick=()=>{if(hash($('lp').value)===C.pw){$('lp').value='';unlock()}else $('le').textContent='Contraseña incorrecta'};
+$('lp').onkeydown=e=>{if(e.key==='Enter')$('lgo').click()};
+$('bio').onclick=async()=>{try{await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:unb64(C.cred)}],userVerification:'required',timeout:60000}});unlock()}catch(e){$('le').textContent='No se pudo verificar'}};
+$('forgot').onclick=()=>{if(confirm('Se quitará la contraseña de esta agenda. Tus turnos NO se borran. ¿Continuar?')){C.pw=null;C.cred=null;sc();unlock()}};
+
+/* Inicio */
+theme();render();lockUI();checkN();setInterval(()=>{render();checkN()},300000);setInterval(tick,1000);
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
