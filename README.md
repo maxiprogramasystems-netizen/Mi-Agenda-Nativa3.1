@@ -23,7 +23,9 @@ App web (PWA) para control de turnos, clientes e ingresos de manicura. Funciona 
 3. Abre el link HTTPS en el celular y usa "Agregar a pantalla de inicio" (Chrome: "Instalar aplicación"; Safari: Compartir > Agregar a pantalla de inicio).
 
 ## Actualizar la app
-Al cambiar `index.html`, cambia también el número de versión en `sw.js` (`const V = 'mi-agenda-v3.3.6'`) para que los celulares reciban la actualización.
+La app se actualiza sola: cada vez que se abre el link (o se vuelve a ella) revisa si hay versión nueva, la descarga y se recarga sin reinstalar. Los datos (turnos, ajustes, contraseña) no se pierden porque se guardan aparte del código. Si estás escribiendo un turno, muestra un aviso para actualizar cuando termines.
+
+Para publicar un cambio: cambia también el número de versión en `sw.js` (`const V = 'mi-agenda-v3.4.0'`) para que los celulares reciban la actualización.
 
 ## Íconos
 Para usar tu propia imagen, reemplaza `icon-192.png` (192×192) e `icon-512.png` (512×512) conservando los nombres.
