@@ -8,11 +8,12 @@ App web (PWA) para control de turnos, clientes e ingresos de manicura. Funciona 
 `index.html` · `manifest.json` · `sw.js` · `icon-192.png` · `icon-512.png` · `icon-maskable-512.png` · `README.md`
 
 ## Funciones
-- Turnos: cliente, servicio, fecha, hora y costo (opcional, editable tocando el valor en la lista). Editar, eliminar, marcar como atendido. Orden de ingreso.
+- Turnos: cliente, servicio, fecha, hora y costo (opcional, editable tocando el valor en la lista). Editar, eliminar, marcar como atendido. Se muestran siempre en estricto orden de ingreso (número de secuencia propio; editar no cambia la posición).
+- Transporte por cita (opcional): medio de transporte, costo de ida y costo de regreso. El panel muestra total de transporte y ganancia neta (ingresos − transporte).
 - Reloj y fecha en vivo en el encabezado; cada turno muestra su fecha (día/mes) y hora en etiquetas.
 - Hora en 24 h o 12 h (AM/PM).
 - Panel: clientes, pendientes, atendidos e ingresos (suma de atendidos). Recordatorios de las próximas 48 h y notificaciones.
-- Exportar a Excel (.xlsx).
+- Exportar a Excel (.xlsx) con orden de ingreso, columnas de transporte y totales.
 - Modo claro/oscuro/automático y fondos acuarela (Lila, Rosa, Durazno, Menta, Cielo).
 - Seguridad opcional: PIN de 4 a 6 dígitos o contraseña alfanumérica, huella/Face ID, quitar o recuperar contraseña (no borra los turnos).
 
@@ -22,7 +23,7 @@ App web (PWA) para control de turnos, clientes e ingresos de manicura. Funciona 
 3. Abre el link HTTPS en el celular y usa "Agregar a pantalla de inicio" (Chrome: "Instalar aplicación"; Safari: Compartir > Agregar a pantalla de inicio).
 
 ## Actualizar la app
-Al cambiar `index.html`, cambia también el número de versión en `sw.js` (`const V = 'mi-agenda-v3.3.5'`) para que los celulares reciban la actualización.
+Al cambiar `index.html`, cambia también el número de versión en `sw.js` (`const V = 'mi-agenda-v3.3.6'`) para que los celulares reciban la actualización.
 
 ## Íconos
 Para usar tu propia imagen, reemplaza `icon-192.png` (192×192) e `icon-512.png` (512×512) conservando los nombres.
@@ -30,4 +31,4 @@ Para usar tu propia imagen, reemplaza `icon-192.png` (192×192) e `icon-512.png`
 ## Datos y privacidad
 Todo se guarda solo en el navegador del dispositivo (localStorage). La contraseña es un bloqueo de privacidad local, no cifra los datos.
 
-Versión 3.3
+Versión 3.4
